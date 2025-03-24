@@ -46,3 +46,70 @@ function keyReleased() {
   if (key === 'W' || key === 'w' || key === 'S' || key === 's') paleta1.direccion = 0;
   if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) paleta2.direccion = 0;
 }
+
+class Paleta {
+  constructor(x) {
+    this.x = x;
+    this.y = height / 2 - 40;
+    this.ancho = 10;
+    this.alto = 80;
+    this.velocidad = 5;
+    this.direccion = 0;
+  }
+  
+  mostrar() {
+    fill(255);
+    rect(this.x, this.y, this.ancho, this.alto);
+  }
+  
+  mover() {
+    this.y += this.direccion * this.velocidad;
+    this.y = constrain(this.y, 0, height - this.alto);
+  }
+}
+
+class Pelota {
+  constructor() {
+    this.reiniciar();
+  }
+  
+  reiniciar() {
+    this.x = width / 2;
+    this.y = height / 2;
+    this.velocidadX = random([-4, 4]);
+    this.velocidadY = random(-3, 3);
+  }
+  
+  actualizar() {
+    this.x += this.velocidadX;
+    this.y += this.velocidadY;
+    
+    if (this.y <= 0 || this.y >= height) this.velocidadY *= -1;
+    
+    if (this.x <= 0) {
+      puntaje2++;
+      this.reiniciar();
+    }
+    if (this.x >= width) {
+      puntaje1++;
+      this.reiniciar();
+    }
+  }
+  
+  mostrar() {
+    fill(255);
+    ellipse(this.x, this.y, 15, 15);
+  }
+  
+  verificarPaleta(paleta) {
+    if (
+      this.x - 7.5 < paleta.x + paleta.ancho &&
+      this.x + 7.5 > paleta.x &&
+      this.y > paleta.y &&
+      this.y < paleta.y + paleta.alto
+    ) {
+      this.velocidadX *= -1.1;
+      this.velocidadY *= 1.1;
+    }
+  }
+}
